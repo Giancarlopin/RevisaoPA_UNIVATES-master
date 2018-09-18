@@ -6,6 +6,11 @@
 package view;
 
 import controller.AlunoController;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import model.Aluno;
 import tools.Combos;
 
 /**
@@ -30,8 +35,8 @@ public class AlunosView extends javax.swing.JFrame {
             AlunoController alunoCon = new AlunoController(null, jtbAlunos);
             alunoCon.PreencheAlunos();
             
-            cbCurso = new Combos();
-            cbCurso.PreencheCombo("SELECT cod_cur, nom_cur FROM cursos ORDER BY nom_cur");
+            cbCurso = new Combos(jcbCurso);
+            cbCurso.PreencheCombo("SELECT cod_curso, nom_curso FROM cursos ORDER BY nom_curso");
             
             /*//Recuperando dados de uma ComboBox
             Combos c = new Combos();
@@ -83,6 +88,11 @@ public class AlunosView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         jLabel1.setText("Nome");
 
@@ -105,6 +115,11 @@ public class AlunosView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jtbAlunos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtbAlunosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jtbAlunos);
 
         jLabel5.setText("Lista dos alunos já cadastrados");
@@ -175,7 +190,29 @@ public class AlunosView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formMouseClicked
+
+    private void jtbAlunosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbAlunosMouseClicked
+        // TODO add your handling code here:
+        //pega a linha selecionada
+         int linhaSelecionada = jtbAlunos.getSelectedRow();
+         // Primeira coluna da linha que é o código
+         String coluna1 = jtbAlunos.getModel().getValueAt(linhaSelecionada, 0).toString();
+         //System.out.println(coluna1);
+         Aluno objAluno = new Aluno();
+         AlunoController alunoCon = new AlunoController(objAluno, null);
+         objAluno = alunoCon.buscar(coluna1);
+         
+         txtMatricula.setText(String.valueOf(objAluno.getMat_aluno()));
+         txtNome.setText(objAluno.getNom_aluno());
+         txtEmail.setText(objAluno.getEmail());
+         cbCurso.SetaComboBox(String.valueOf(objAluno.getCod_curso()));            
+    }//GEN-LAST:event_jtbAlunosMouseClicked
 
     /**
      * @param args the command line arguments
